@@ -49,8 +49,8 @@ static void show(const Stack *const hand)
 {
     putchar('[');
     if (hand->count > 0) {
-        putchar(face[hand->card[hand->count - 1]]);
-        for (int i = hand->count - 2; i >= 0; --i) {
+        putchar(face[hand->card[0]]);
+        for (int i = 1; i < hand->count; ++i) {
             putchar(',');
             putchar(face[hand->card[i]]);
         }
@@ -61,6 +61,7 @@ static void show(const Stack *const hand)
 
 static void init(void)
 {
+    shuffle();
     player[0].count = HALF;
     player[1].count = HALF;
     memcpy(player[0].card, deck.card       , HALF * sizeof *deck.card);
@@ -69,8 +70,8 @@ static void init(void)
 
 int main(void)
 {
-    show(&deck);
-    shuffle();
-    show(&deck);
+    init();
+    show(&player[0]);
+    show(&player[1]);
     return 0;
 }
