@@ -68,10 +68,30 @@ static void init(void)
     memcpy(player[1].card, &deck.card[HALF], HALF * sizeof *deck.card);
 }
 
+static int play(const int playerindex)
+{
+    Stack *const p = &player[playerindex];  // helper pointer
+    if (p->count <= 0)
+        return -1;  // can't play from empty stack
+    return pile.card[pile.count++] = p->card[--p->count];
+}
+
+static int penalty(const int playerindex, int amount)
+{
+    Stack *const p = &player[playerindex];  // helper pointer
+    while (p->count > 0 && amount-- > 0) {
+        const int cardplayed = (pile.card[pile.count++] = p->card[--p->count]);
+        if (cardplayed > 0)
+            return cardplayed;
+    }
+    return amount == 0 ? 0 : -1;
+}
+
 int main(void)
 {
     init();
     show(&player[0]);
     show(&player[1]);
+    int turn = 0;
     return 0;
 }
